@@ -122,5 +122,47 @@
 			return ExtendDownwards(Width * proportionOfWidth);
 		}
 
+		/// <summary>
+		/// Determine whether or not there is an area of overlap between
+		/// two intervals.
+		/// </summary>
+		/// <returns><c>true</c>, if with was intersectsed, <c>false</c> otherwise.</returns>
+		/// <param name="other">Other.</param>
+		public bool IntersectsWith(Interval other)
+		{
+			return !(this.UpperBound < other.LowerBound
+				|| other.UpperBound < this.LowerBound);
+		}
+
+		/// <summary>
+		/// Returns the part of the real line which lies both within this
+		/// interval and the other interval, if it exists.
+		/// </summary>
+		/// <returns>The with.</returns>
+		/// <param name="other">Other.</param>
+		public Maybe<Interval> IntersectionWith(Interval other)
+		{
+			if (!IntersectsWith(other))
+			{
+				return new Maybe<Interval>();
+			}
+			else
+			{
+				return new Maybe<Interval>(new Interval(
+					Greatest(this.LowerBound, other.LowerBound),
+					Smallest(this.UpperBound, other.UpperBound)));
+			}
+		}
+
+		private float Smallest(float a, float b)
+		{
+			return a < b ? a : b;
+		}	
+
+		private float Greatest(float a, float b)
+		{
+			return a > b ? a : b;
+		}
+
 	}
 }
