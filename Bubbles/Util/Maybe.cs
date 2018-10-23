@@ -83,5 +83,12 @@ namespace Bubbles.Util
 			}
 		}
 
+		public override string ToString ()
+		{
+			return HasResult()
+				? "Just " + GetResult().ToString()
+				: "Nothing";
+		}
+
 	}
 }

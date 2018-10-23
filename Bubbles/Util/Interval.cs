@@ -164,5 +164,10 @@
 			return a > b ? a : b;
 		}
 
+		public override string ToString ()
+		{
+			return "[" + LowerBound.ToString() + ", " + UpperBound.ToString() + ")";
+		}
+
 	}
 }
