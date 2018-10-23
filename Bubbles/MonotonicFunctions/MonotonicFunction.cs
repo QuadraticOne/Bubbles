@@ -10,7 +10,7 @@ namespace Bubbles.MonotonicFunctions
 	public abstract class MonotonicFunction
 	{
 
-		protected const float DEFAULT_EPS = 1e-7f;
+		protected const float DEFAULT_EPS = 1e-4f;
 
 		public enum MonotonicFunctionType
 		{
@@ -232,7 +232,7 @@ namespace Bubbles.MonotonicFunctions
 		/// </summary>
 		/// <returns><c>true</c>, if contains zero was intervaled, <c>false</c> otherwise.</returns>
 		/// <param name="interval">Interval.</param>
-		protected bool IntervalContainsZero(Interval interval)
+		public bool IntervalContainsZero(Interval interval)
 		{
 			return At(interval.LowerBound) < 0 && At(interval.UpperBound) > 0;
 		}
@@ -251,7 +251,7 @@ namespace Bubbles.MonotonicFunctions
 		{
 			Interval functionDomain = Domain();
 			if (float.IsNegativeInfinity(functionDomain.LowerBound)
-				|| float.IsPositiveInfinity(functionDomain.UpperBound))
+				&& float.IsPositiveInfinity(functionDomain.UpperBound))
 			{
 				return new Interval(-gaugeWidth, gaugeWidth);
 			}
