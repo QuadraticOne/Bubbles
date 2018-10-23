@@ -103,5 +103,18 @@ namespace Bubbles.MonotonicFunctions
 			}
 		}
 
+		/// <summary>
+		/// Return the function that results from summing two quadratics.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		public Quadratic Add(Quadratic other)
+		{
+			return new Quadratic(
+				this.QuadraticCoefficient + other.QuadraticCoefficient,
+				this.LinearCoefficient + other.LinearCoefficient,
+				this.ConstantCoefficient + other.ConstantCoefficient
+			);
+		}
+
 	}
 }
