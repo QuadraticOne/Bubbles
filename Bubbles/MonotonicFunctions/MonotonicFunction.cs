@@ -136,7 +136,7 @@ namespace Bubbles.MonotonicFunctions
 			int expansionFactor = 3, int maxContractionIterations = 20,
 			float maximumIntervalWidth = 0.01f)
 		{
-			var containsZero = LocateZero(InitialSearchDomain(),
+			var containsZero = LocateZero(BoundZeroNewtonRaphson(),
 				maxExpansionIterations, expansionFactor);
 			if (containsZero.HasResult())
 			{
@@ -288,16 +288,18 @@ namespace Bubbles.MonotonicFunctions
 		/// <param name="stopDelta">Stop delta.</param>
 		/// <param name="widthIfFound">Width if found.</param>
 		/// <param name="widthIfMissed">Width if missed.</param>
-		protected virtual Interval BoundZeroNewtonRaphson(float? initialGuess = null,
-			int maxIterations = 10, float stopDelta = 0.005f,
+		public virtual Interval BoundZeroNewtonRaphson(float? initialGuess = null,
+			int maxIterations = 20, float stopDelta = 0.005f,
 			float widthIfFound = DEFAULT_EPS, float widthIfMissed = 5f)
 		{
+			var domain = Domain();
 			float currentGuess = initialGuess ?? InitialSearchDomain().Midpoint();
 			float changeFromLast = float.PositiveInfinity;
 			int iterations = 0;
 			while (iterations < maxIterations && changeFromLast > stopDelta)
 			{
-				float newGuess = currentGuess - (At(currentGuess) / DerivativeAt(currentGuess));
+				float newGuess = domain.Clip(
+					currentGuess - (At(currentGuess) / DerivativeAt(currentGuess)));
 				changeFromLast = Mathf.Abs(currentGuess - newGuess);
 				currentGuess = newGuess;
 				iterations++;
