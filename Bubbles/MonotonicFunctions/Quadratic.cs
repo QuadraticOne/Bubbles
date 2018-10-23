@@ -79,7 +79,7 @@ namespace Bubbles.MonotonicFunctions
 		/// <param name="expansionFactor">Expansion factor.</param>
 		/// <param name="maxContractionIterations">Max contraction iterations.</param>
 		/// <param name="maximumIntervalWidth">Maximum interval width.</param>
-		public virtual Maybe<Interval> BoundZero(int maxExpansionIterations = 20,
+		public override Maybe<Interval> BoundZero(int maxExpansionIterations = 20,
 			int expansionFactor = 3, int maxContractionIterations = 20,
 			float maximumIntervalWidth = 0.01f)
 		{

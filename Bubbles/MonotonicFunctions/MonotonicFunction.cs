@@ -288,7 +288,7 @@ namespace Bubbles.MonotonicFunctions
 		/// <param name="stopDelta">Stop delta.</param>
 		/// <param name="widthIfFound">Width if found.</param>
 		/// <param name="widthIfMissed">Width if missed.</param>
-		public virtual Interval BoundZeroNewtonRaphson(float? initialGuess = null,
+		protected virtual Interval BoundZeroNewtonRaphson(float? initialGuess = null,
 			int maxIterations = 20, float stopDelta = 0.005f,
 			float widthIfFound = DEFAULT_EPS, float widthIfMissed = 5f)
 		{
