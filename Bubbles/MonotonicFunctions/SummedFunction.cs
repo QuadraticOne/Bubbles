@@ -9,7 +9,7 @@ namespace Bubbles.MonotonicFunctions
 		private IEnumerable<MonotonicFunction> functions;
 		private Maybe<Interval> domain;
 
-		public SummedFunction(IEnumerable<MonotonicFunction> functions)
+		private SummedFunction(IEnumerable<MonotonicFunction> functions)
 		{
 			this.functions = functions;
 			this.domain = new Maybe<Interval>(
@@ -61,6 +61,35 @@ namespace Bubbles.MonotonicFunctions
 				value += function.SecondDerivativeAt(x);
 			}
 			return value;
+		}
+
+		/// <summary>
+		/// Return a monotonic function which is the sum of two other monotonic
+		/// functions, which will be valid on the domain that is common to both
+		/// domains of the input functions.
+		/// </summary>
+		/// <returns>The of pair.</returns>
+		/// <param name="addend">Addend.</param>
+		/// <param name="augend">Augend.</param>
+		public static SummedFunction SumOfPair(
+			MonotonicFunction addend, MonotonicFunction augend)
+		{
+			var functions = new List<MonotonicFunction>();
+			functions.Add(addend);
+			functions.Add(augend);
+			return new SummedFunction(functions);
+		}
+
+		/// <summary>
+		/// Return a monotonic function which is the sum of a number of other
+		/// monotonic functions, which will be valid on the domain that is
+		/// common to the domains of all the input functions.
+		/// </summary>
+		/// <returns>The of.</returns>
+		/// <param name="">.</param>
+		public static SummedFunction SumOf(IEnumerable<MonotonicFunction> functions)
+		{
+			return new SummedFunction(functions);
 		}
 
 	}
