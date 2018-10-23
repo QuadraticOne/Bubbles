@@ -169,5 +169,26 @@
 			return "[" + LowerBound.ToString() + ", " + UpperBound.ToString() + ")";
 		}
 
+		/// <summary>
+		/// Clip the value such that if it lies outside the interval, the closest value
+		/// which is inside the interval is returned; otherwise the value is returned.
+		/// </summary>
+		/// <param name="x">The x coordinate.</param>
+		public float Clip(float x)
+		{
+			if (x >= UpperBound)
+			{
+				return UpperBound;
+			}
+			else if (x < LowerBound)
+			{
+				return LowerBound;
+			}
+			else
+			{
+				return x;
+			}
+		}
+
 	}
 }
