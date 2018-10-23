@@ -69,6 +69,15 @@
 		}
 
 		/// <summary>
+		/// Return the midpoint of the interval.  Will throw an error if used
+		/// on an interval whose bounds are infinite.
+		/// </summary>
+		public float Midpoint()
+		{
+			return PointByRatio(0.5f);
+		}
+
+		/// <summary>
 		/// Split the interval into a pair of intervals, dividing it at
 		/// a point a certain proportion along its width.
 		/// </summary>

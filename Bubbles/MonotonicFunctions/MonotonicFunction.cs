@@ -1,4 +1,5 @@
 ﻿using Bubbles.Util;
+using UnityEngine;
 
 namespace Bubbles.MonotonicFunctions
 {
@@ -269,6 +270,44 @@ namespace Bubbles.MonotonicFunctions
 			{
 				return functionDomain;
 			}
+		}
+
+		/// <summary>
+		/// Use the Newton-Raphson method to approximately locate the function's root.  If
+		/// no initial guess is given, the midpoint of the initial guess bound will be
+		/// used.  When the maximum number of iterations have elapsed or the change in
+		/// guess between iterations goes below the given threshold, a interval will be
+		/// created centred on the best guess whose width will be `widthIfFound` * 2.  If
+		/// this interval contains the function's zero it will be returned; otherwise, a
+		/// new interval also centred on the best guess but with width
+		/// `widthIfMissed` * 2 will be returned.
+		/// </summary>
+		/// <returns>The zero newton raphson.</returns>
+		/// <param name="initialGuess">Initial guess.</param>
+		/// <param name="maxIterations">Max iterations.</param>
+		/// <param name="stopDelta">Stop delta.</param>
+		/// <param name="widthIfFound">Width if found.</param>
+		/// <param name="widthIfMissed">Width if missed.</param>
+		protected virtual Interval BoundZeroNewtonRaphson(float? initialGuess = null,
+			int maxIterations = 10, float stopDelta = 0.005f,
+			float widthIfFound = DEFAULT_EPS, float widthIfMissed = 5f)
+		{
+			float currentGuess = initialGuess ?? InitialSearchDomain().Midpoint();
+			float changeFromLast = float.PositiveInfinity;
+			int iterations = 0;
+			while (iterations < maxIterations && changeFromLast > stopDelta)
+			{
+				float newGuess = currentGuess - (At(currentGuess) / DerivativeAt(currentGuess));
+				changeFromLast = Mathf.Abs(currentGuess - newGuess);
+				currentGuess = newGuess;
+				iterations++;
+			}
+			var testInterval = new Interval(
+				currentGuess - widthIfFound, currentGuess + widthIfFound);
+
+			return IntervalContainsZero(testInterval)
+				? testInterval
+				: new Interval(currentGuess - widthIfMissed, currentGuess + widthIfMissed);
 		}
 
 	}
