@@ -28,13 +28,23 @@ namespace Bubbles.MonotonicFunctions
 		}
 
 		/// <summary>
+		/// Sum the two input functions and return the result.
+		/// </summary>
+		/// <param name="f">F.</param>
+		/// <param name="g">The green component.</param>
+		public MonotonicFunction Sum(MonotonicFunction f, MonotonicFunction g)
+		{
+			return Check(f, g).GetResult();
+		}
+
+		/// <summary>
 		/// Add the given check, then add the same check again but with the
 		/// arguments reversed.
 		/// </summary>
 		/// <param name="checkFunc">Check func.</param>
 		/// <typeparam name="ChildA">The 1st type parameter.</typeparam>
 		/// <typeparam name="ChildB">The 2nd type parameter.</typeparam>
-		public void AddCheckWithReverse<ChildA, ChildB>(
+		private void AddCheckWithReverse<ChildA, ChildB>(
 			Func<ChildA, ChildB, MonotonicFunction> checkFunc)
 			where ChildA : class
 			where ChildB : class
