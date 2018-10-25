@@ -30,5 +30,10 @@ namespace Bubbles.MonotonicFunctions.Functions
 			return Intercept + Gradient * x;
 		}
 
+		public override float? Root()
+		{
+			return -Intercept / Gradient;
+		}
+
 	}
 }

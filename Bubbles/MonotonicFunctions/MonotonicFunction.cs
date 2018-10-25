@@ -25,5 +25,11 @@ namespace Bubbles.MonotonicFunctions
 		/// <param name="x">The x coordinate.</param>
 		public abstract float At(float x);
 
+		/// <summary>
+		/// Find the root of the function - the x-value at which it evaluates
+		/// to zero.  If no root exists, return null.
+		/// </summary>
+		public abstract float? Root();
+
 	}
 }

@@ -18,5 +18,17 @@ namespace Bubbles.MonotonicFunctions.Functions
 			return Value;
 		}
 
+		public override float? Root()
+		{
+			if (Value == 0f)
+			{
+				return float.NegativeInfinity;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 	}
 }

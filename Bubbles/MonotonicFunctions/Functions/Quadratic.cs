@@ -1,5 +1,6 @@
 ﻿using Bubbles.Util;
 using Bubbles.MonotonicFunctions;
+using UnityEngine;
 
 namespace Bubbles.MonotonicFunctions.Functions
 {
@@ -40,6 +41,22 @@ namespace Bubbles.MonotonicFunctions.Functions
 		public override float At(float x)
 		{
 			return QuadraticCoefficient * x * x + LinearCoefficient * x + ConstantCoefficient;
+		}
+
+		public override float? Root()
+		{
+			float discriminant = LinearCoefficient * LinearCoefficient -
+				4 * QuadraticCoefficient * ConstantCoefficient;
+			if (discriminant >= 0)
+			{
+				int sign = QuadraticCoefficient > 0 ? 1 : -1;
+				return (-LinearCoefficient + sign * Mathf.Sqrt(discriminant))
+					/ (2 * QuadraticCoefficient);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 	}
