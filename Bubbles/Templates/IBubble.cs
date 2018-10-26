@@ -7,6 +7,7 @@ namespace Bubbles.Templates
 	/// that represents a certain type of physical system.
 	/// </summary>
 	public interface IBubble<System, Position>
+		where Position : IPosition<Position>
 	{
 
 		/// <summary>
