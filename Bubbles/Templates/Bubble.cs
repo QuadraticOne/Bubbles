@@ -48,6 +48,12 @@ namespace Bubbles.Templates
 		public abstract void RebaseTime(float offset);
 
 		/// <summary>
+		/// Remeasure the properties of the system at the given time.
+		/// </summary>
+		/// <param name="t">T.</param>
+		public abstract void Remeasure(float t);
+
+		/// <summary>
 		/// At each time step, set the state of the GameObject to represent
 		/// the state of the physical system at the current time.
 		/// </summary>

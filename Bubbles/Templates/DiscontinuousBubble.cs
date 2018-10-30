@@ -27,6 +27,34 @@ namespace Bubbles.Templates
 		public abstract void ResolveDiscontinuity();
 
 		/// <summary>
+		/// Remeasure the properties of the system at the given time; it can be
+		/// safely assumed that this will only be called for times which are
+		/// before the system's next discontinuity.
+		/// </summary>
+		/// <param name="t">T.</param>
+		public abstract void RemeasureContinuous(float t);
+
+		/// <summary>
+		/// Remeausre the properties of the system at the given time.  If the
+		/// given time is beyond the system's next discontinuity, any necessary
+		/// discontinuities will be resolved before remeasuring at the given
+		/// time.
+		/// </summary>
+		/// <param name="t">T.</param>
+		public override void Remeasure(float t)
+		{
+			if (t < NextDiscontinuity())
+			{
+				RemeasureContinuous(t);
+			}
+			else
+			{
+				ResolveDiscontinuity();
+				Remeasure(t);
+			}
+		}
+
+		/// <summary>
 		/// Set the state of the GameObject to represent the state of
 		/// the system at time t.  It can be assumed that this method will
 		/// only be called with values that are in the continuous region of
