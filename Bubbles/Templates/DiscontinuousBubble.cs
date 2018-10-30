@@ -2,6 +2,11 @@
 
 namespace Bubbles.Templates
 {
+	/// <summary>
+	/// A practical implementation of a discontinuous bubble, whose state cannot
+	/// necessarily be stated as an explicit function of time, but rather has
+	/// discontinuities.
+	/// </summary>
 	public abstract class DiscontinuousBubble<Position> : Bubble<Position>
 		where Position : IPosition<Position>
 	{
