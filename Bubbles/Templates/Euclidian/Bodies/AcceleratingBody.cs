@@ -43,7 +43,7 @@ namespace Bubbles.Templates.Euclidian.Bodies
 			return reach;
 		}
 
-		public override void SetState(float t)
+		public override void SetStateContinuous(float t)
 		{
 			transform.position = PositionAtTime(t).ToVector3();
 		}
@@ -54,7 +54,7 @@ namespace Bubbles.Templates.Euclidian.Bodies
 			RecalculateReach();
 		}
 
-		public override void Remeasure(float t)
+		public override void RemeasureContinuous(float t)
 		{
 			var newPosition = PositionAtTime(t);
 			var newVelocity = VelocityAtTime(t);

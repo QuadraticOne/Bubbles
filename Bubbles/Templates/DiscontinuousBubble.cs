@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Bubbles.MonotonicFunctions;
 
 namespace Bubbles.Templates
 {
@@ -7,74 +8,75 @@ namespace Bubbles.Templates
 	/// necessarily be stated as an explicit function of time, but rather has
 	/// discontinuities.
 	/// </summary>
-	public abstract class DiscontinuousBubble<Position> : Bubble<Position>
+	public abstract class DiscontinuousBubble<Position> : MonoBehaviour
 		where Position : IPosition<Position>
 	{
 
 		/// <summary>
-		/// Return the time at which the next discontinuity will occur.
-		/// It is assumed that the system's state will be continuous
-		/// and an explicit function of time between the time at which
-		/// it was measured and the time at which the next discontinuity
-		/// occurs.  This value should be memoised if possible.
+		/// Return the time at which the properties of the enclosed
+		/// system were measured.
+		/// </summary>
+		/// <returns>The measurement time.</returns>
+		public abstract float GetMeasurementTime();
+
+		/// <summary>
+		/// Return the position of the bubble's origin.
+		/// </summary>
+		/// <returns>The position.</returns>
+		public abstract Position GetPosition();
+
+		/// <summary>
+		/// Return a monotonic function describing the bubble's boundary
+		/// radius as a function of time.
+		/// </summary>
+		/// <returns>The boundary radius.</returns>
+		public abstract MonotonicFunction GetBoundaryRadius();
+
+		/// <summary>
+		/// Return the time at which the next discontinuity occurs.
 		/// </summary>
 		/// <returns>The discontinuity.</returns>
 		public abstract float NextDiscontinuity();
 
 		/// <summary>
-		/// Set the state of the system to the state in which it will
-		/// be immediately after the next discontinuity.  This may include
-		/// updating the measured time, next discontinuity time, and
-		/// other properties.  After resolving the discontinuity, the
-		/// time at which the next discontinuity will occur should be
-		/// greater then the time of the discontinuity which just occurred.
+		/// Remeasure the state of the enclosed system immediately before
+		/// the next discontinuity, update the object's properties to reflect
+		/// any changes that occur across the discontinuity, and then remeasure
+		/// the enclosed system's properties again.
 		/// </summary>
-		public abstract void ResolveDiscontinuity();
+		public abstract void ResolveNextDiscontinuity();
 
 		/// <summary>
-		/// Remeasure the properties of the system at the given time; it can be
-		/// safely assumed that this will only be called for times which are
-		/// before the system's next discontinuity.
+		/// Set the state of this GameObject to represent the state of the
+		/// enclosed system at the given time.  It may be assumed that t will
+		/// always be after the measured time and before the next discontinuity.
+		/// </summary>
+		/// <param name="t">T.</param>
+		public abstract void SetStateContinuous(float t);
+
+		/// <summary>
+		/// Remeasure the properties of the enclosed system at the given time.
+		/// It may be assumed that t will always be after the measured time
+		/// and before the next discontinuity.
 		/// </summary>
 		/// <param name="t">T.</param>
 		public abstract void RemeasureContinuous(float t);
 
 		/// <summary>
-		/// Remeausre the properties of the system at the given time.  If the
-		/// given time is beyond the system's next discontinuity, any necessary
-		/// discontinuities will be resolved before remeasuring at the given
-		/// time.
+		/// Change the listed time of measurement such that the state of the
+		/// enclosed system at (t - offset) after rebasing is equal to its state
+		/// at (t) before rebasing.
 		/// </summary>
-		/// <param name="t">T.</param>
-		public override void Remeasure(float t)
-		{
-			if (t < NextDiscontinuity())
-			{
-				RemeasureContinuous(t);
-			}
-			else
-			{
-				ResolveDiscontinuity();
-				Remeasure(t);
-			}
-		}
+		/// <param name="offset">Offset.</param>
+		public abstract void RebaseTime(float offset);
 
 		/// <summary>
-		/// Set the state of the GameObject to represent the state of
-		/// the system at time t.  It can be assumed that this method will
-		/// only be called with values that are in the continuous region of
-		/// the system's state - between its measured time and the time
-		/// of the next discontinuity.
-		/// </summary>
-		public abstract void SetStateContinuous(float t);
-
-		/// <summary>
-		/// Set the state of the GameObject to represent the state of
-		/// the system at time t, automatically resolving any
-		/// discontinuities.
+		/// Set the state of this GameObject to represent the state of the
+		/// enclosed system at the given time.  This will automatically resolve
+		/// any discontinuities between the current measured time and t.
 		/// </summary>
 		/// <param name="t">T.</param>
-		public override void SetState(float t)
+		public virtual void SetState(float t)
 		{
 			if (t < NextDiscontinuity())
 			{
@@ -82,9 +84,37 @@ namespace Bubbles.Templates
 			}
 			else
 			{
-				ResolveDiscontinuity();
+				ResolveNextDiscontinuity();
 				SetState(t);
 			}
+		}
+
+		/// <summary>
+		/// Remeasure the properties of the enclosed system at the given time.
+		/// This will automatically resolve any discontinuities between the
+		/// current measured time and t.
+		/// </summary>
+		/// <param name="t">T.</param>
+		public virtual void Remeasure(float t)
+		{
+			if (t < NextDiscontinuity())
+			{
+				RemeasureContinuous(t);
+			}
+			else
+			{
+				ResolveNextDiscontinuity();
+				Remeasure(t);
+			}
+		}
+
+		/// <summary>
+		/// At each time step, set the state of the GameObject to
+		/// represent the state of the enclosed system at the current time.
+		/// </summary>
+		public void Update()
+		{
+			SetState(Time.time);
 		}
 
 	}
