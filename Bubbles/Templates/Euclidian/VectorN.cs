@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Bubbles.Templates
+namespace Bubbles.Templates.Euclidian
 {
 	/// <summary>
 	/// Defines a vector in an n-dimensional space.
