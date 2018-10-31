@@ -1,6 +1,7 @@
 ﻿using Bubbles.Templates.Euclidian;
 using Bubbles.MonotonicFunctions;
 using Bubbles.MonotonicFunctions.Functions;
+using UnityEngine;
 
 namespace Bubbles.Templates.Euclidian.Bodies
 {
@@ -11,21 +12,18 @@ namespace Bubbles.Templates.Euclidian.Bodies
 	public class AcceleratingBody : EuclidianBubble
 	{
 
-		public readonly int Dimension;
-		public readonly float BodyRadius;
+		public int Dimension;
+		public float BodyRadius;
 
-		private float measuredTime;
-		private VectorN position, velocity, acceleration;
+		protected float measuredTime;
+		protected VectorN position, velocity, acceleration;
 
-		private MonotonicFunction reach;
+		protected MonotonicFunction reach;
 
-		public AcceleratingBody(int dimensions, float bodyRadius)
+		public void Start()
 		{
-			Dimension = dimensions;
-			BodyRadius = bodyRadius;
-
-			measuredTime = 0f;
-			position = new VectorN(Dimension);
+			measuredTime = 2f;
+			position = VectorN.FromVector3(transform.position);
 			velocity = new VectorN(Dimension);
 			acceleration = new VectorN(Dimension);
 		}
@@ -76,15 +74,25 @@ namespace Bubbles.Templates.Euclidian.Bodies
 		private void RecalculateReach()
 		{
 			float t = measuredTime;
-			float s0 = position.Magnitude;
+			float s0 = BodyRadius;
 			float v0 = velocity.Magnitude;
 			float a0 = acceleration.Magnitude;
 
-			float a = 0.5f * a0;
-			float b = v0 - 2 * a * t;
-			float c = s0 - b * t - a * t * t;
-
-			reach = new Quadratic(a, b, c);
+			if (a0 != 0.0f)
+			{
+				float a = 0.5f * a0;
+				float b = v0 - 2 * a * t;
+				float c = s0 - b * t - a * t * t;
+				reach = new Quadratic(a, b, c);
+			}
+			else if (v0 != 0)
+			{
+				reach = new Linear(v0, s0);
+			}
+			else
+			{
+				reach = new Constant(s0);
+			}
 		}
 
 		/// <summary>

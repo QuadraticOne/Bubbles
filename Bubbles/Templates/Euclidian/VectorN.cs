@@ -168,5 +168,15 @@ namespace Bubbles.Templates.Euclidian
 			return v.Map(x => x / k);
 		}
 
+		public static VectorN FromVector2(Vector2 v)
+		{
+			return new VectorN(v.x, v.y);
+		}
+
+		public static VectorN FromVector3(Vector3 v)
+		{
+			return new VectorN(v.x, v.y, v.z);
+		}
+
 	}
 }
