@@ -110,7 +110,8 @@ namespace Bubbles.Templates.MetaBubbles
 					Right.ResolveNextDiscontinuity();
 					break;
 				case DiscontinuityType.PAIR:
-					interactionSolver.ResolveNextDiscontinuity(Left, Right);
+					interactionSolver.ResolveNextDiscontinuityAfter(
+						GetMeasurementTime(), Left, Right);
 					break;
 				default:
 					throw new System.ArgumentException("unknown discontinuity type");
@@ -138,7 +139,8 @@ namespace Bubbles.Templates.MetaBubbles
 		{
 			var leftNextDiscontinuity = Left.NextDiscontinuity();
 			var rightNextDiscontinuity = Right.NextDiscontinuity();
-			var pairNextDiscontinuity = interactionSolver.NextDiscontinuity(Left, Right);
+			var pairNextDiscontinuity = interactionSolver.NextDiscontinuityAfter(
+				GetMeasurementTime(), Left, Right);
 
 			if (leftNextDiscontinuity < rightNextDiscontinuity
 				&& leftNextDiscontinuity < pairNextDiscontinuity)
