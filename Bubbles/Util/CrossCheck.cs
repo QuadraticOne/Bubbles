@@ -14,13 +14,22 @@ namespace Bubbles.Util
 	{
 
 		private List<Func<ParentA, ParentB, Maybe<TResult>>> checks;
+		private Func<ParentA, ParentB, TResult> fallback;
 
 		/// <summary>
 		/// Create a new CrossCheck class.
 		/// </summary>
-		public CrossCheck()
+		public CrossCheck(Func<ParentA, ParentB, TResult> fallback = null)
 		{
 			checks = new List<Func<ParentA, ParentB, Maybe<TResult>>>();
+			if (fallback == null)
+			{
+				this.fallback = (_1, _2) => default(TResult);
+			}
+			else
+			{
+				this.fallback = fallback;
+			}
 		}
 
 		/// <summary>
