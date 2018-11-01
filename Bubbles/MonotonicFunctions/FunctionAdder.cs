@@ -2,6 +2,7 @@
 using Bubbles.MonotonicFunctions.Functions;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 namespace Bubbles.MonotonicFunctions
 {
@@ -35,6 +36,16 @@ namespace Bubbles.MonotonicFunctions
 		public MonotonicFunction Sum(MonotonicFunction f, MonotonicFunction g)
 		{
 			return Check(f, g).GetResult();
+		}
+
+		public MonotonicFunction SumMany(IEnumerable<MonotonicFunction> fs)
+		{
+			MonotonicFunction fTotal = new Constant(0.0f);
+			foreach (var f in fs)
+			{
+				fTotal = Sum(fTotal, f);
+			}
+			return fTotal;
 		}
 
 		/// <summary>

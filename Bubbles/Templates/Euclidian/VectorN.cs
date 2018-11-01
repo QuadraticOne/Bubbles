@@ -52,6 +52,11 @@ namespace Bubbles.Templates.Euclidian
 			return Mathf.Sqrt(total);
 		}
 
+		public VectorN Midpoint(VectorN other)
+		{
+			return this.MapWith(other, (a, b) => 0.5f * (a + b));
+		}
+
 		/// <summary>
 		/// Map each element of the vector to a new value according
 		/// to some function.

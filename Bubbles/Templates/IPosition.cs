@@ -18,5 +18,13 @@
 		/// <param name="other">Other.</param>
 		float SimilarityTo(T other);
 
+		/// <summary>
+		/// Return the position that is at the midpoint of the two input
+		/// positions, such that its similarity to both is equal and
+		/// as small as possible.
+		/// </summary>
+		/// <param name="other">Other.</param>
+		T Midpoint(T other);
+
 	}
 }
