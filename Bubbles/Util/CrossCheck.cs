@@ -56,17 +56,17 @@ namespace Bubbles.Util
 		/// </summary>
 		/// <param name="a">The alpha component.</param>
 		/// <param name="b">The blue component.</param>
-		public Maybe<TResult> Check(ParentA a, ParentB b)
+		public TResult Check(ParentA a, ParentB b)
 		{
 			foreach (var checkFunc in checks)
 			{
 				Maybe<TResult> result = checkFunc(a, b);
 				if (result.HasResult())
 				{
-					return result;
+					return result.GetResult();
 				}
 			}
-			return new Maybe<TResult>();
+			return fallback(a, b);
 		}
 
 	}

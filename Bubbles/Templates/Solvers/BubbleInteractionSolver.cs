@@ -20,9 +20,11 @@ namespace Bubbles.Templates.Solvers
 		public BubbleInteractionSolver()
 		{
 			discontinuityFinders =
-				new CrossCheck<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>, float>();
+				new CrossCheck<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>, float>(
+				(_1, _2) => float.PositiveInfinity);
 			discontinuityResolvers =
-				new CrossCheck<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>, int>();
+				new CrossCheck<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>, int>(
+				(_1, _2) => 0);
 		}
 
 		public void AddInteraction<TypeA, TypeB>(
@@ -40,14 +42,7 @@ namespace Bubbles.Templates.Solvers
 			DiscontinuousBubble<Position> b)
 		{
 			var output = discontinuityFinders.Check(a, b);
-			if (output.HasResult())
-			{
-				return output.GetResult();
-			}
-			else
-			{
-				return float.PositiveInfinity;
-			}
+			return output;
 		}
 
 		public void ResolveNextDiscontinuity(

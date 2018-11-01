@@ -35,7 +35,7 @@ namespace Bubbles.MonotonicFunctions
 		/// <param name="g">The green component.</param>
 		public MonotonicFunction Sum(MonotonicFunction f, MonotonicFunction g)
 		{
-			return Check(f, g).GetResult();
+			return Check(f, g);
 		}
 
 		public MonotonicFunction SumMany(IEnumerable<MonotonicFunction> fs)
