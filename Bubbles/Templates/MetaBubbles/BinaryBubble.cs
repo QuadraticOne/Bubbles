@@ -9,6 +9,56 @@ namespace Bubbles.Templates.MetaBubbles
 		where Position : class, IPosition<Position>
 	{
 
+		/// <summary>
+		/// Find the time of the next discontinuity between a binary bubble and
+		/// some other discontinuous bubble.
+		/// </summary>
+		/// <returns>The next discontinuity after.</returns>
+		/// <param name="solver">Solver.</param>
+		/// <param name="after">After.</param>
+		/// <param name="binaryBubble">Binary bubble.</param>
+		/// <param name="other">Other.</param>
+		public static float PairNextDiscontinuityAfter(BubbleInteractionSolver<Position> solver, 
+			float after, BinaryBubble<Position> binaryBubble, DiscontinuousBubble<Position> other)
+		{
+			var leftNextDiscontinuity = solver.NextDiscontinuityAfter(
+				after, binaryBubble.Left, other);
+			var rightNextDiscontinuity = solver.NextDiscontinuityAfter(
+				after, binaryBubble.Right, other);
+
+			// TODO: cache the result somehow
+			return leftNextDiscontinuity < rightNextDiscontinuity
+				? leftNextDiscontinuity
+				: rightNextDiscontinuity;
+		}
+
+		/// <summary>
+		/// Resolve the next discontinuity between a binary bubble and some other
+		/// discontinuous bubble.
+		/// </summary>
+		/// <param name="solver">Solver.</param>
+		/// <param name="after">After.</param>
+		/// <param name="binaryBubble">Binary bubble.</param>
+		/// <param name="other">Other.</param>
+		public static void PairResolveDiscontinuityAfter(BubbleInteractionSolver<Position> solver,
+			float after, BinaryBubble<Position> binaryBubble, DiscontinuousBubble<Position> other)
+		{
+			// TODO: cache this part from the previous function
+			var leftNextDiscontinuity = solver.NextDiscontinuityAfter(
+				after, binaryBubble.Left, other);
+			var rightNextDiscontinuity = solver.NextDiscontinuityAfter(
+				after, binaryBubble.Right, other);
+
+			if (leftNextDiscontinuity < rightNextDiscontinuity)
+			{
+				solver.ResolveNextDiscontinuityAfter(after, binaryBubble.Left, other);
+			}
+			else 
+			{
+				solver.ResolveNextDiscontinuityAfter(after, binaryBubble.Right, other);
+			}
+		}
+
 		private enum DiscontinuityType { LEFT, RIGHT, PAIR }
 
 		public DiscontinuousBubble<Position> Left, Right;
