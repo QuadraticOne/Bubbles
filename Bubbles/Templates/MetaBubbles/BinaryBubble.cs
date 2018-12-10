@@ -2,6 +2,7 @@
 using Bubbles.MonotonicFunctions.Functions;
 using Bubbles.Templates;
 using Bubbles.Templates.Solvers;
+using Bubbles.Util;
 
 namespace Bubbles.Templates.MetaBubbles
 {
@@ -56,6 +57,105 @@ namespace Bubbles.Templates.MetaBubbles
 			else 
 			{
 				solver.ResolveNextDiscontinuityAfter(after, binaryBubble.Right, other);
+			}
+		}
+
+		/// <summary>
+		/// Find the time at which the next discontinuity occurs between two binary
+		/// discontinuous bubbles.
+		/// </summary>
+		/// <returns>The pair next discontinuity after.</returns>
+		/// <param name="solver">Solver.</param>
+		/// <param name="after">After.</param>
+		/// <param name="a">The alpha component.</param>
+		/// <param name="b">The blue component.</param>
+		public static float BinaryPairNextDiscontinuityAfter(
+			BubbleInteractionSolver<Position> solver, float after,
+			BinaryBubble<Position> a, BinaryBubble<Position> b)
+		{
+			var aNextDiscontinuity = a.NextDiscontinuity();
+			var bNextDiscontinuity = b.NextDiscontinuity();
+
+			var pairs = new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>[]
+			{
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Left, b.Left),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Left, b.Right),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Right, b.Left),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Right, b.Right)
+			};
+
+			float nextDiscontinuity = aNextDiscontinuity < bNextDiscontinuity
+				? aNextDiscontinuity : bNextDiscontinuity;
+
+			foreach (var pair in pairs)
+			{
+				var pairDiscontinuity = solver.NextDiscontinuityAfter(
+					after, pair.First, pair.Second);
+				if (pairDiscontinuity < nextDiscontinuity)
+				{
+					nextDiscontinuity = pairDiscontinuity;
+				}
+			}
+
+			return nextDiscontinuity;
+		}
+
+		/// <summary>
+		/// Resolve the next discontinuity between two binary discontinuous bubbles.
+		/// This may involve swapping individual bubbles between the binary bubbles.
+		/// </summary>
+		/// <param name="solver">Solver.</param>
+		/// <param name="after">After.</param>
+		/// <param name="a">The alpha component.</param>
+		/// <param name="b">The blue component.</param>
+		public static void BinaryPairResolveDiscontinuityAfter(
+			BubbleInteractionSolver<Position> solver, float after,
+			BinaryBubble<Position> a, BinaryBubble<Position> b)
+		{
+			// TODO: find a way of caching this result from the prior check
+			// 		 (might need to be a change implemented in the solver)
+			var aNextDiscontinuity = a.NextDiscontinuity();
+			var bNextDiscontinuity = b.NextDiscontinuity();
+
+			var pairs = new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>[]
+			{
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Left, b.Left),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Left, b.Right),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Right, b.Left),
+				new Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>>(a.Right, b.Right)
+			};
+
+			float nextDiscontinuity = aNextDiscontinuity < bNextDiscontinuity
+				? aNextDiscontinuity : bNextDiscontinuity;
+			Pair<DiscontinuousBubble<Position>, DiscontinuousBubble<Position>> nextPair = null;
+
+			foreach (var pair in pairs)
+			{
+				var pairDiscontinuity = solver.NextDiscontinuityAfter(
+					after, pair.First, pair.Second);
+				if (pairDiscontinuity < nextDiscontinuity)
+				{
+					nextDiscontinuity = pairDiscontinuity;
+					nextPair = pair;
+				}
+			}
+
+			if (nextPair == null)
+			{
+				if (aNextDiscontinuity < bNextDiscontinuity)
+				{
+					a.ResolveNextDiscontinuity();
+				}
+				else
+				{
+					b.ResolveNextDiscontinuity();
+				}
+			}
+			else
+			{
+				solver.ResolveNextDiscontinuityAfter(after, nextPair.First, nextPair.Second);
+				a.RecalculateProperties();
+				b.RecalculateProperties();
 			}
 		}
 
